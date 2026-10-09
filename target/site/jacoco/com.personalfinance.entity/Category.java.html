@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Category.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">personal-finance-manager</a> &gt; <a href="index.source.html" class="el_package">com.personalfinance.entity</a> &gt; <span class="el_source">Category.java</span></div><h1>Category.java</h1><pre class="source lang-java linenums">package com.personalfinance.entity;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+/**
+ * JPA entity representing a transaction category.
+ *
+ * &lt;p&gt;Default categories are shared between all users ({@code user} is
+ * {@code null} and {@code isCustom} is {@code false}); custom categories are
+ * owned by exactly one user.&lt;/p&gt;
+ */
+@Entity
+@Table(name = &quot;categories&quot;)
+<span class="nc bnc" id="L18" title="All 46 branches missed.">@Data</span>
+<span class="nc" id="L19">@NoArgsConstructor</span>
+<span class="fc" id="L20">@AllArgsConstructor</span>
+<span class="pc" id="L21">@Builder</span>
+public class Category {
+
+    /** Unique identifier of the category. */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+<span class="nc" id="L27">    private Long id;</span>
+
+    /** Name of the category. */
+    @Column(nullable = false)
+<span class="fc" id="L31">    private String name;</span>
+
+    /** Type of the category (INCOME or EXPENSE). */
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+<span class="fc" id="L36">    private CategoryType type;</span>
+
+    /** Whether the category is a user-defined custom category. */
+    @Column(nullable = false)
+<span class="fc" id="L40">    private Boolean isCustom;</span>
+
+    /** Owner of the category; {@code null} for shared default categories. */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;user_id&quot;, nullable = true)
+<span class="nc" id="L45">    private User user;</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

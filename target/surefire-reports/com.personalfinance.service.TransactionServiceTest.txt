@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.personalfinance.service.TransactionServiceTest
+-------------------------------------------------------------------------------
+Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.049 s -- in com.personalfinance.service.TransactionServiceTest

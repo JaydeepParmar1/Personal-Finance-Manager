@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GoalResponse.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">personal-finance-manager</a> &gt; <a href="index.source.html" class="el_package">com.personalfinance.dto</a> &gt; <span class="el_source">GoalResponse.java</span></div><h1>GoalResponse.java</h1><pre class="source lang-java linenums">package com.personalfinance.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+/**
+ * Response DTO representing a savings goal with its current progress.
+ */
+<span class="nc bnc" id="L14" title="All 70 branches missed.">@Data</span>
+<span class="nc" id="L15">@NoArgsConstructor</span>
+<span class="fc" id="L16">@AllArgsConstructor</span>
+<span class="pc" id="L17">@Builder</span>
+public class GoalResponse {
+    /** Unique identifier of the goal. */
+<span class="fc" id="L20">    private Long id;</span>
+    /** Descriptive name of the goal. */
+<span class="fc" id="L22">    private String goalName;</span>
+    /** Target amount to be saved. */
+<span class="fc" id="L24">    private BigDecimal targetAmount;</span>
+    /** Date by which the goal should be reached. */
+<span class="fc" id="L26">    private LocalDate targetDate;</span>
+    /** Date from which progress is calculated. */
+<span class="fc" id="L28">    private LocalDate startDate;</span>
+    /** Current progress (total income minus total expenses since the start date). */
+<span class="fc" id="L30">    private BigDecimal currentProgress;</span>
+    /** Progress as a percentage of the target amount. */
+<span class="fc" id="L32">    private Double progressPercentage;</span>
+    /** Amount still required to reach the target. */
+<span class="fc" id="L34">    private BigDecimal remainingAmount;</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,12 @@
+com\personalfinance\controller\AuthControllerTest.class
+com\personalfinance\controller\TransactionControllerTest.class
+com\personalfinance\service\AuthServiceTest.class
+com\personalfinance\service\CategoryServiceTest.class
+com\personalfinance\controller\GoalControllerTest.class
+com\personalfinance\service\ReportServiceTest.class
+com\personalfinance\exception\GlobalExceptionHandlerTest.class
+com\personalfinance\controller\ReportControllerTest.class
+com\personalfinance\service\CustomUserDetailsServiceTest.class
+com\personalfinance\service\GoalServiceTest.class
+com\personalfinance\controller\CategoryControllerTest.class
+com\personalfinance\service\TransactionServiceTest.class
