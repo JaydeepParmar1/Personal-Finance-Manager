@@ -40,7 +40,7 @@ public class GoalService {
      *
      * @param request the goal details (goal name, target amount, target date, optional start date)
      * @return the created goal including progress information
-     * @throws BadRequestException if the target date is not in the future
+     * @throws BadRequestException if the target date is not in the future or the start date is after the target date
      */
     @Transactional
     public GoalResponse createGoal(GoalRequest request) {
@@ -48,6 +48,10 @@ public class GoalService {
 
         if (!request.getTargetDate().isAfter(LocalDate.now())) {
             throw new BadRequestException("Target date must be a future date");
+        }
+
+        if (request.getStartDate() != null && request.getStartDate().isAfter(request.getTargetDate())) {
+            throw new BadRequestException("Start date cannot be after target date");
         }
 
         LocalDate startDate = request.getStartDate() != null ? request.getStartDate() : LocalDate.now();

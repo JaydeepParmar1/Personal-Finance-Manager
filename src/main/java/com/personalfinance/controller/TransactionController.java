@@ -45,6 +45,7 @@ public class TransactionController {
      * @param endDate      the end of the date range (inclusive), optional
      * @param categoryId   the id of the category to filter by, optional
      * @param categoryName the name of the category to filter by, optional
+     * @param category     alias for categoryName, optional
      * @param type         the transaction type (INCOME/EXPENSE) to filter by, optional
      * @return the list of matching transactions with HTTP 200
      */
@@ -54,14 +55,16 @@ public class TransactionController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) String categoryName,
+            @RequestParam(required = false) String category,
             @RequestParam(required = false) CategoryType type) {
-        TransactionListResponse response = transactionService.getTransactions(startDate, endDate, categoryId, categoryName, type);
+        String effectiveCategoryName = categoryName != null ? categoryName : category;
+        TransactionListResponse response = transactionService.getTransactions(startDate, endDate, categoryId, effectiveCategoryName, type);
         return ResponseEntity.ok(response);
     }
 
     /**
      * Updates an existing transaction of the authenticated user. The date field
-     * is immutable; any attempt to modify it is rejected with HTTP 400.
+     * is immutable; any date supplied in the request is silently ignored.
      *
      * @param id      the id of the transaction to update
      * @param request the fields to update (amount, category, description)

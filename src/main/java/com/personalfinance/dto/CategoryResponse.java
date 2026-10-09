@@ -23,4 +23,15 @@ public class CategoryResponse {
     /** Whether the category is a user-defined custom category. */
     @JsonProperty("isCustom")
     private Boolean isCustom;
+
+    /**
+     * Alias for {@code isCustom}, serialized under the {@code custom} key
+     * for API consumers.
+     *
+     * @return whether the category is custom
+     */
+    @JsonProperty("custom")
+    public Boolean getCustom() {
+        return isCustom;
+    }
 }

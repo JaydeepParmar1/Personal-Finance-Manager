@@ -125,15 +125,21 @@ class TransactionServiceTest {
     }
 
     @Test
-    void updateTransaction_ChangeDate_ThrowsBadRequestException() {
+    void updateTransaction_DateFieldIsIgnored() {
         TransactionUpdateRequest request = TransactionUpdateRequest.builder()
+                .amount(new BigDecimal("60000.00"))
                 .date(LocalDate.now().minusDays(5))
+                .description("Updated Salary")
                 .build();
 
         when(authService.getCurrentUser()).thenReturn(testUser);
         when(transactionRepository.findById(10L)).thenReturn(Optional.of(transaction));
+        when(transactionRepository.save(any(Transaction.class))).thenReturn(transaction);
 
-        assertThrows(BadRequestException.class, () -> transactionService.updateTransaction(10L, request));
+        TransactionResponse response = transactionService.updateTransaction(10L, request);
+
+        assertNotNull(response);
+        verify(transactionRepository, times(1)).save(transaction);
     }
 
     @Test

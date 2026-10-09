@@ -12,8 +12,8 @@ import java.time.LocalDate;
 /**
  * Request DTO for updating a financial transaction.
  *
- * <p>All fields are optional; the date field may only be present when it is
- * unchanged, since the date of a transaction is immutable.</p>
+ * <p>All fields are optional; the date field is always ignored,
+ * since the date of a transaction is immutable.</p>
  */
 @Data
 @NoArgsConstructor
@@ -31,6 +31,6 @@ public class TransactionUpdateRequest {
     /** New description of the transaction. */
     private String description;
 
-    /** May only be present when equal to the existing date (date is immutable). */
+    /** Always ignored; the transaction date is immutable. */
     private LocalDate date;
 }

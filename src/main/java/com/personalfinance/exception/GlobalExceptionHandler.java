@@ -2,6 +2,7 @@ package com.personalfinance.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -107,6 +108,22 @@ public class GlobalExceptionHandler {
         Map<String, Object> response = new HashMap<>();
         response.put("error", "Bad Request");
         response.put("message", errorMessage.isEmpty() ? "Validation failed" : errorMessage);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    /**
+     * Handles request bodies that cannot be read or deserialized,
+     * such as malformed JSON or invalid field values (e.g. an invalid
+     * enum constant or an unparseable date).
+     *
+     * @param ex the message conversion exception
+     * @return HTTP 400 with the error details
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String, Object>> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Bad Request");
+        response.put("message", "Malformed JSON or invalid field value");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 

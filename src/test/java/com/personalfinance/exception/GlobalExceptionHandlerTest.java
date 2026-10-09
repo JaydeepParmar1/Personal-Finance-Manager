@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
 
 import java.util.Map;
@@ -66,6 +67,16 @@ class GlobalExceptionHandlerTest {
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
         assertEquals("Unauthorized", response.getBody().get("error"));
+    }
+
+    @Test
+    void handleHttpMessageNotReadable() {
+        HttpMessageNotReadableException ex = new HttpMessageNotReadableException("Malformed JSON");
+        ResponseEntity<Map<String, Object>> response = exceptionHandler.handleHttpMessageNotReadable(ex);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Bad Request", response.getBody().get("error"));
+        assertEquals("Malformed JSON or invalid field value", response.getBody().get("message"));
     }
 
     @Test

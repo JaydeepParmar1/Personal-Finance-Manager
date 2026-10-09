@@ -49,7 +49,7 @@ Unit and controller tests are located in `src/test`. JaCoCo generates the covera
 - **Data isolation**: Every repository query is scoped by the owning user. Resources that exist but belong to another user are answered with HTTP 403 (Forbidden); resources that do not exist are answered with HTTP 404 (Not Found).
 - **404 vs 403 distinction**: Update/delete operations first load the resource by id, then verify ownership. This allows the API to return 404 for unknown ids and 403 for foreign-owned resources, as specified in the assignment's error table.
 - **Category model**: Default categories (Salary; Food, Rent, Transportation, Entertainment, Healthcare, Utilities) are shared rows with a `null` owner and cannot be modified or deleted. Custom categories are owned by exactly one user; names are unique per user (case-insensitive) and may not collide with default names. Deleting another user's custom category returns 403; deleting a referenced category returns 400.
-- **Immutable transaction date**: The transaction date cannot be changed after creation; `PUT /api/transactions/{id}` rejects requests that attempt to modify it (HTTP 400).
+- **Immutable transaction date**: The transaction date cannot be changed after creation; any `date` supplied in `PUT /api/transactions/{id}` is silently ignored.
 - **Goal progress**: Progress is computed on the fly as (total income − total expenses) since the goal start date, so deleted transactions are automatically reflected in goals and reports.
 - **Validation on write operations**: `@Valid` is applied to all request bodies, including updates, so amount/date constraints are enforced on every write.
 - **Report input validation**: Month must be 1–12 and year 1–9999; invalid values return HTTP 400 instead of a 500 error.
@@ -61,7 +61,7 @@ Unit and controller tests are located in `src/test`. JaCoCo generates the covera
 - **Password**: 8–100 characters (BCrypt-hashed at rest).
 - **Phone number**: optional leading `+`, 7–18 characters of digits, spaces, dashes or parentheses (e.g. `+1234567890`).
 - **Amounts**: positive decimal values (minimum 0.01).
-- **Transaction date**: `YYYY-MM-DD`, not in the future; immutable after creation.
+- **Transaction date**: `YYYY-MM-DD`, not in the future; immutable after creation (updates ignore it).
 - **Goal target date**: must be in the future.
 
 ## Error Responses
@@ -70,7 +70,7 @@ All errors return a JSON body of the form `{"error": "...", "message": "..."}`.
 | Status | Meaning |
 |---|---|
 | 200/201 | Success |
-| 400 | Validation errors, malformed input, default-category deletion, referenced-category deletion, immutable-field modification |
+| 400 | Validation errors, malformed JSON or invalid field values, default-category deletion, referenced-category deletion |
 | 401 | Invalid credentials, expired/missing session |
 | 403 | Accessing another user's data |
 | 404 | Resource not found |
@@ -135,7 +135,7 @@ Sets the `JSESSIONID` session cookie for subsequent API calls.
 ```json
 { "name": "SideBusinessIncome", "type": "INCOME" }
 ```
-**Response (201 Created)**: `{ "name": "SideBusinessIncome", "type": "INCOME", "isCustom": true }`
+**Response (201 Created)**: `{ "name": "SideBusinessIncome", "type": "INCOME", "isCustom": true, "custom": true }`
 
 #### Delete Custom Category
 `DELETE /api/categories/{name}`
@@ -162,16 +162,16 @@ Sets the `JSESSIONID` session cookie for subsequent API calls.
 ```
 
 #### Get Transactions (with filtering)
-`GET /api/transactions?startDate=2024-01-01&endDate=2024-01-31&categoryId=1&type=INCOME`
+`GET /api/transactions?startDate=2024-01-01&endDate=2024-01-31&categoryId=1&category=Salary&type=INCOME`
 
-Results are sorted by newest first.
+Filters: date range, category by id (`categoryId`) or by name (`categoryName` or `category`), and type. Results are sorted by newest first.
 
 #### Update Transaction
 `PUT /api/transactions/{id}`
 ```json
 { "amount": 60000.00, "description": "Updated January Salary" }
 ```
-The `date` field is immutable and cannot be modified.
+The `date` field is immutable; any date supplied in the request is silently ignored.
 
 #### Delete Transaction
 `DELETE /api/transactions/{id}`
@@ -192,7 +192,7 @@ The `date` field is immutable and cannot be modified.
   "startDate": "2025-01-01"
 }
 ```
-`startDate` is optional and defaults to the creation date.
+`startDate` is optional and defaults to the creation date; it must not be after `targetDate`.
 
 **Response (201 Created)**:
 ```json

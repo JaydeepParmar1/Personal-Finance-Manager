@@ -85,6 +85,25 @@ class TransactionControllerTest {
     }
 
     @Test
+    void getTransactions_FilterByCategoryName_Success() throws Exception {
+        TransactionResponse tx = TransactionResponse.builder()
+                .id(1L)
+                .amount(new BigDecimal("50000.00"))
+                .date(LocalDate.of(2024, 1, 15))
+                .category("Salary")
+                .type(CategoryType.INCOME)
+                .build();
+
+        TransactionListResponse response = TransactionListResponse.builder().transactions(List.of(tx)).build();
+
+        when(transactionService.getTransactions(any(), any(), any(), eq("Salary"), any())).thenReturn(response);
+
+        mockMvc.perform(get("/api/transactions").param("category", "Salary"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.transactions[0].id").value(1));
+    }
+
+    @Test
     void updateTransaction_Success() throws Exception {
         TransactionUpdateRequest request = TransactionUpdateRequest.builder()
                 .amount(new BigDecimal("60000.00"))

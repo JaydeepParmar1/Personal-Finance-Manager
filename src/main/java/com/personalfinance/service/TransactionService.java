@@ -88,14 +88,15 @@ public class TransactionService {
 
     /**
      * Updates an existing transaction of the currently authenticated user.
-     * The date field is immutable; any attempt to modify it is rejected.
+     * The date field is immutable; any date supplied in the request is
+     * silently ignored.
      *
      * @param id      the id of the transaction to update
      * @param request the fields to update (amount, category, description)
      * @return the updated transaction as a response DTO
      * @throws ResourceNotFoundException if no transaction with the given id exists
      * @throws ForbiddenException        if the transaction belongs to another user
-     * @throws BadRequestException       if the date field is modified or the category is invalid
+     * @throws BadRequestException       if the category is invalid
      */
     @Transactional
     public TransactionResponse updateTransaction(Long id, TransactionUpdateRequest request) {
@@ -105,11 +106,6 @@ public class TransactionService {
 
         if (!transaction.getUser().getId().equals(currentUser.getId())) {
             throw new ForbiddenException("Access denied: transaction belongs to another user");
-        }
-
-        // Check date immutability rule
-        if (request.getDate() != null && !request.getDate().equals(transaction.getDate())) {
-            throw new BadRequestException("Transaction date field cannot be modified");
         }
 
         if (request.getAmount() != null) {

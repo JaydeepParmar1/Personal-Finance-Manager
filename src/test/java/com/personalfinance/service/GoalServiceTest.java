@@ -112,6 +112,20 @@ class GoalServiceTest {
     }
 
     @Test
+    void createGoal_StartDateAfterTargetDate_ThrowsBadRequestException() {
+        GoalRequest request = GoalRequest.builder()
+                .goalName("Invalid Dates Goal")
+                .targetAmount(new BigDecimal("5000.00"))
+                .targetDate(LocalDate.now().plusMonths(6))
+                .startDate(LocalDate.now().plusMonths(12))
+                .build();
+
+        when(authService.getCurrentUser()).thenReturn(testUser);
+
+        assertThrows(BadRequestException.class, () -> goalService.createGoal(request));
+    }
+
+    @Test
     void getAllGoals_Success() {
         when(authService.getCurrentUser()).thenReturn(testUser);
         when(goalRepository.findByUser(testUser)).thenReturn(List.of(testGoal));
